@@ -1,3 +1,5 @@
+# erd
+
 [![CI Status](https://github.com/zoobzio/erd/workflows/CI/badge.svg)](https://github.com/zoobzio/erd/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/zoobzio/erd/graph/badge.svg?branch=main)](https://codecov.io/gh/zoobzio/erd)
 [![Go Report Card](https://goreportcard.com/badge/github.com/zoobzio/erd)](https://goreportcard.com/report/github.com/zoobzio/erd)
@@ -6,8 +8,6 @@
 [![License](https://img.shields.io/github/license/zoobzio/erd)](LICENSE)
 [![Go Version](https://img.shields.io/github/go-mod/go-version/zoobzio/erd)](go.mod)
 [![Release](https://img.shields.io/github/v/release/zoobzio/erd)](https://github.com/zoobzio/erd/releases)
-
-# erd
 
 Go package for defining and generating Entity Relationship Diagrams from domain models.
 
@@ -78,21 +78,27 @@ if len(errors) > 0 {
 ## Key Concepts
 
 ### Entity
+
 Represents a domain model entity (typically a Go struct):
+
 - Name
 - Package (optional)
 - Attributes
 - Notes
 
 ### Attribute
+
 Represents a field/property of an entity:
+
 - Name and Type
 - Key constraints (PK, FK, UK)
 - Nullable flag
 - Notes
 
 ### Relationship
+
 Represents relationships between entities:
+
 - From/To entities
 - Field name
 - Cardinality (one-to-one, one-to-many, many-to-one, many-to-many)
