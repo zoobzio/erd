@@ -1,0 +1,690 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>erd: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/zoobzio/erd/builder.go (100.0%)</option>
+				
+				<option value="file1">github.com/zoobzio/erd/dot.go (100.0%)</option>
+				
+				<option value="file2">github.com/zoobzio/erd/mermaid.go (100.0%)</option>
+				
+				<option value="file3">github.com/zoobzio/erd/validate.go (100.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package erd
+
+// NewDiagram creates a new ERD diagram.
+func NewDiagram(title string) *Diagram <span class="cov8" title="1">{
+        return &amp;Diagram{
+                Title:         title,
+                Entities:      make(map[string]*Entity),
+                Relationships: []*Relationship{},
+        }
+}</span>
+
+// WithDescription sets the description for the diagram.
+func (d *Diagram) WithDescription(description string) *Diagram <span class="cov8" title="1">{
+        d.Description = &amp;description
+        return d
+}</span>
+
+// AddEntity adds an entity to the diagram.
+func (d *Diagram) AddEntity(entity *Entity) *Diagram <span class="cov8" title="1">{
+        d.Entities[entity.Name] = entity
+        return d
+}</span>
+
+// AddRelationship adds a relationship to the diagram.
+func (d *Diagram) AddRelationship(rel *Relationship) *Diagram <span class="cov8" title="1">{
+        d.Relationships = append(d.Relationships, rel)
+        return d
+}</span>
+
+// NewEntity creates a new entity.
+func NewEntity(name string) *Entity <span class="cov8" title="1">{
+        return &amp;Entity{
+                Name:       name,
+                Attributes: []*Attribute{},
+        }
+}</span>
+
+// WithPackage sets the package name for the entity.
+func (e *Entity) WithPackage(pkg string) *Entity <span class="cov8" title="1">{
+        e.Package = &amp;pkg
+        return e
+}</span>
+
+// WithNote adds a note to the entity.
+func (e *Entity) WithNote(note string) *Entity <span class="cov8" title="1">{
+        e.Note = &amp;note
+        return e
+}</span>
+
+// AddAttribute adds an attribute to the entity.
+func (e *Entity) AddAttribute(attr *Attribute) *Entity <span class="cov8" title="1">{
+        e.Attributes = append(e.Attributes, attr)
+        return e
+}</span>
+
+// NewAttribute creates a new attribute.
+func NewAttribute(name, attrType string) *Attribute <span class="cov8" title="1">{
+        return &amp;Attribute{
+                Name:     name,
+                Type:     attrType,
+                Nullable: false,
+        }
+}</span>
+
+// WithKey marks the attribute with a key type.
+func (a *Attribute) WithKey(keyType KeyType) *Attribute <span class="cov8" title="1">{
+        a.Key = &amp;keyType
+        return a
+}</span>
+
+// WithPrimaryKey marks the attribute as a primary key.
+func (a *Attribute) WithPrimaryKey() *Attribute <span class="cov8" title="1">{
+        key := PrimaryKey
+        a.Key = &amp;key
+        return a
+}</span>
+
+// WithForeignKey marks the attribute as a foreign key.
+func (a *Attribute) WithForeignKey() *Attribute <span class="cov8" title="1">{
+        key := ForeignKey
+        a.Key = &amp;key
+        return a
+}</span>
+
+// WithUnique marks the attribute as unique.
+func (a *Attribute) WithUnique() *Attribute <span class="cov8" title="1">{
+        key := UniqueKey
+        a.Key = &amp;key
+        return a
+}</span>
+
+// WithNullable marks the attribute as nullable.
+func (a *Attribute) WithNullable() *Attribute <span class="cov8" title="1">{
+        a.Nullable = true
+        return a
+}</span>
+
+// WithNote adds a note to the attribute.
+func (a *Attribute) WithNote(note string) *Attribute <span class="cov8" title="1">{
+        a.Note = &amp;note
+        return a
+}</span>
+
+// NewRelationship creates a new relationship.
+func NewRelationship(from, to, field string, cardinality Cardinality) *Relationship <span class="cov8" title="1">{
+        return &amp;Relationship{
+                From:        from,
+                To:          to,
+                Field:       field,
+                Cardinality: cardinality,
+        }
+}</span>
+
+// WithLabel sets a label for the relationship.
+func (r *Relationship) WithLabel(label string) *Relationship <span class="cov8" title="1">{
+        r.Label = &amp;label
+        return r
+}</span>
+
+// WithNote adds a note to the relationship.
+func (r *Relationship) WithNote(note string) *Relationship <span class="cov8" title="1">{
+        r.Note = &amp;note
+        return r
+}</span>
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package erd
+
+import (
+        "fmt"
+        "sort"
+        "strings"
+)
+
+// ToDOT generates a GraphViz DOT diagram from the diagram structure.
+func (d *Diagram) ToDOT() string <span class="cov8" title="1">{
+        var sb strings.Builder
+
+        sb.WriteString("digraph ERD {\n")
+        sb.WriteString("    rankdir=LR;\n")
+        sb.WriteString("    node [shape=record];\n")
+
+        // Add title if present
+        if d.Title != "" </span><span class="cov8" title="1">{
+                sb.WriteString("    labelloc=\"t\";\n")
+                sb.WriteString(fmt.Sprintf("    label=%q;\n", escapeDOT(d.Title)))
+        }</span>
+
+        <span class="cov8" title="1">sb.WriteString("\n")
+
+        // Write entities with their attributes (sorted by name for deterministic output)
+        entityNames := make([]string, 0, len(d.Entities))
+        for name := range d.Entities </span><span class="cov8" title="1">{
+                entityNames = append(entityNames, name)
+        }</span>
+        <span class="cov8" title="1">sort.Strings(entityNames)
+
+        for _, name := range entityNames </span><span class="cov8" title="1">{
+                entity := d.Entities[name]
+                sb.WriteString(formatDOTEntity(entity))
+        }</span>
+
+        <span class="cov8" title="1">sb.WriteString("\n")
+
+        // Write relationships
+        for _, rel := range d.Relationships </span><span class="cov8" title="1">{
+                sb.WriteString(formatDOTRelationship(rel))
+        }</span>
+
+        <span class="cov8" title="1">sb.WriteString("}\n")
+        return sb.String()</span>
+}
+
+// formatDOTEntity formats an entity as a DOT record node.
+func formatDOTEntity(entity *Entity) string <span class="cov8" title="1">{
+        var sb strings.Builder
+
+        sb.WriteString(fmt.Sprintf("    %s [label=\"{%s|",
+                sanitizeName(entity.Name),
+                escapeDOT(entity.Name)))
+
+        attrs := make([]string, 0, len(entity.Attributes))
+        for _, attr := range entity.Attributes </span><span class="cov8" title="1">{
+                attrs = append(attrs, formatDOTAttribute(attr))
+        }</span>
+
+        <span class="cov8" title="1">sb.WriteString(strings.Join(attrs, "\\l"))
+        sb.WriteString("\\l}\"];\n")
+
+        return sb.String()</span>
+}
+
+// formatDOTAttribute formats an attribute for DOT syntax.
+func formatDOTAttribute(attr *Attribute) string <span class="cov8" title="1">{
+        var parts []string
+
+        // Add key indicator
+        if attr.Key != nil </span><span class="cov8" title="1">{
+                parts = append(parts, string(*attr.Key))
+        }</span>
+
+        // Add name and type
+        <span class="cov8" title="1">parts = append(parts, fmt.Sprintf("%s: %s",
+                attr.Name,
+                sanitizeType(attr.Type)))
+
+        // Add nullable indicator
+        if attr.Nullable </span><span class="cov8" title="1">{
+                parts = append(parts, "?")
+        }</span>
+
+        <span class="cov8" title="1">return escapeDOT(strings.Join(parts, " "))</span>
+}
+
+// formatDOTRelationship formats a relationship for DOT syntax.
+func formatDOTRelationship(rel *Relationship) string <span class="cov8" title="1">{
+        edgeStyle := getDOTCardinality(rel.Cardinality)
+        label := rel.Field
+        if rel.Label != nil </span><span class="cov8" title="1">{
+                label = *rel.Label
+        }</span>
+
+        <span class="cov8" title="1">return fmt.Sprintf("    %s -&gt; %s [%s label=%q];\n",
+                sanitizeName(rel.From),
+                sanitizeName(rel.To),
+                edgeStyle,
+                escapeDOT(label))</span>
+}
+
+// getDOTCardinality returns DOT edge styling for cardinality.
+func getDOTCardinality(c Cardinality) string <span class="cov8" title="1">{
+        switch c </span>{
+        case OneToOne:<span class="cov8" title="1">
+                return "arrowhead=normal, arrowtail=normal, dir=both"</span>
+        case OneToMany:<span class="cov8" title="1">
+                return "arrowhead=crow, arrowtail=normal, dir=both"</span>
+        case ManyToOne:<span class="cov8" title="1">
+                return "arrowhead=normal, arrowtail=crow, dir=both"</span>
+        case ManyToMany:<span class="cov8" title="1">
+                return "arrowhead=crow, arrowtail=crow, dir=both"</span>
+        default:<span class="cov8" title="1">
+                return "arrowhead=normal"</span>
+        }
+}
+
+// escapeDOT escapes special characters for DOT syntax.
+func escapeDOT(s string) string <span class="cov8" title="1">{
+        s = strings.ReplaceAll(s, "\\", "\\\\")
+        s = strings.ReplaceAll(s, "\"", "\\\"")
+        s = strings.ReplaceAll(s, "\n", "\\n")
+        return s
+}</span>
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package erd
+
+import (
+        "fmt"
+        "sort"
+        "strings"
+)
+
+// ToMermaid generates a Mermaid ERD diagram from the diagram structure.
+func (d *Diagram) ToMermaid() string <span class="cov8" title="1">{
+        var sb strings.Builder
+
+        sb.WriteString("erDiagram\n")
+
+        // Write entities with their attributes (sorted by name for deterministic output)
+        entityNames := make([]string, 0, len(d.Entities))
+        for name := range d.Entities </span><span class="cov8" title="1">{
+                entityNames = append(entityNames, name)
+        }</span>
+        <span class="cov8" title="1">sort.Strings(entityNames)
+
+        for _, name := range entityNames </span><span class="cov8" title="1">{
+                entity := d.Entities[name]
+                sb.WriteString(fmt.Sprintf("    %s {\n", sanitizeName(entity.Name)))
+                for _, attr := range entity.Attributes </span><span class="cov8" title="1">{
+                        sb.WriteString(formatMermaidAttribute(attr))
+                }</span>
+                <span class="cov8" title="1">sb.WriteString("    }\n")</span>
+        }
+
+        // Write relationships
+        <span class="cov8" title="1">for _, rel := range d.Relationships </span><span class="cov8" title="1">{
+                sb.WriteString(formatMermaidRelationship(rel))
+        }</span>
+
+        <span class="cov8" title="1">return sb.String()</span>
+}
+
+// formatMermaidAttribute formats an attribute for Mermaid syntax.
+func formatMermaidAttribute(attr *Attribute) string <span class="cov8" title="1">{
+        var parts []string
+
+        // Type comes first in Mermaid
+        parts = append(parts, sanitizeType(attr.Type))
+
+        // Then the name
+        parts = append(parts, attr.Name)
+
+        // Add key constraint if present
+        if attr.Key != nil </span><span class="cov8" title="1">{
+                parts = append(parts, string(*attr.Key))
+        }</span>
+
+        // Add comment for nullable or notes
+        <span class="cov8" title="1">var comments []string
+        if attr.Nullable </span><span class="cov8" title="1">{
+                comments = append(comments, "nullable")
+        }</span>
+        <span class="cov8" title="1">if attr.Note != nil </span><span class="cov8" title="1">{
+                comments = append(comments, *attr.Note)
+        }</span>
+
+        <span class="cov8" title="1">line := fmt.Sprintf("        %s", strings.Join(parts, " "))
+        if len(comments) &gt; 0 </span><span class="cov8" title="1">{
+                line = fmt.Sprintf("%s %q", line, strings.Join(comments, ", "))
+        }</span>
+
+        <span class="cov8" title="1">return line + "\n"</span>
+}
+
+// formatMermaidRelationship formats a relationship for Mermaid syntax.
+func formatMermaidRelationship(rel *Relationship) string <span class="cov8" title="1">{
+        symbol := getMermaidCardinality(rel.Cardinality)
+        label := rel.Field
+        if rel.Label != nil </span><span class="cov8" title="1">{
+                label = *rel.Label
+        }</span>
+
+        <span class="cov8" title="1">return fmt.Sprintf("    %s %s %s : %s\n",
+                sanitizeName(rel.From),
+                symbol,
+                sanitizeName(rel.To),
+                label)</span>
+}
+
+// getMermaidCardinality converts cardinality to Mermaid relationship syntax.
+func getMermaidCardinality(c Cardinality) string <span class="cov8" title="1">{
+        switch c </span>{
+        case OneToOne:<span class="cov8" title="1">
+                return "||--||"</span>
+        case OneToMany:<span class="cov8" title="1">
+                return "||--o{"</span>
+        case ManyToOne:<span class="cov8" title="1">
+                return "}o--||"</span>
+        case ManyToMany:<span class="cov8" title="1">
+                return "}o--o{"</span>
+        default:<span class="cov8" title="1">
+                return "||--||"</span>
+        }
+}
+
+// sanitizeName ensures names are valid for Mermaid syntax.
+func sanitizeName(name string) string <span class="cov8" title="1">{
+        name = strings.ReplaceAll(name, " ", "_")
+        name = strings.ReplaceAll(name, "-", "_")
+        name = strings.ReplaceAll(name, ".", "_")
+        return name
+}</span>
+
+// sanitizeType simplifies type names for display.
+func sanitizeType(typeName string) string <span class="cov8" title="1">{
+        // Remove package prefixes
+        parts := strings.Split(typeName, ".")
+        if len(parts) &gt; 1 </span><span class="cov8" title="1">{
+                typeName = parts[len(parts)-1]
+        }</span>
+
+        // Simplify common patterns
+        <span class="cov8" title="1">typeName = strings.ReplaceAll(typeName, "[]", "Array_")
+        typeName = strings.ReplaceAll(typeName, "*", "")
+        typeName = strings.ReplaceAll(typeName, " ", "_")
+
+        return typeName</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package erd
+
+import (
+        "fmt"
+        "strings"
+)
+
+// ValidationError represents a validation error.
+type ValidationError struct {
+        Field   string
+        Message string
+}
+
+// Error implements the error interface.
+func (e ValidationError) Error() string <span class="cov8" title="1">{
+        return fmt.Sprintf("%s: %s", e.Field, e.Message)
+}</span>
+
+// Validate checks the diagram for structural validity.
+func (d *Diagram) Validate() []ValidationError <span class="cov8" title="1">{
+        var errors []ValidationError
+
+        // Check title is present
+        if strings.TrimSpace(d.Title) == "" </span><span class="cov8" title="1">{
+                errors = append(errors, ValidationError{
+                        Field:   "Title",
+                        Message: "diagram title is required",
+                })
+        }</span>
+
+        // Check entities exist
+        <span class="cov8" title="1">if len(d.Entities) == 0 </span><span class="cov8" title="1">{
+                errors = append(errors, ValidationError{
+                        Field:   "Entities",
+                        Message: "diagram must have at least one entity",
+                })
+        }</span>
+
+        // Validate each entity
+        <span class="cov8" title="1">for name, entity := range d.Entities </span><span class="cov8" title="1">{
+                if entityErrors := entity.Validate(); len(entityErrors) &gt; 0 </span><span class="cov8" title="1">{
+                        for _, err := range entityErrors </span><span class="cov8" title="1">{
+                                errors = append(errors, ValidationError{
+                                        Field:   fmt.Sprintf("Entity[%s].%s", name, err.Field),
+                                        Message: err.Message,
+                                })
+                        }</span>
+                }
+        }
+
+        // Validate relationships reference valid entities
+        <span class="cov8" title="1">for i, rel := range d.Relationships </span><span class="cov8" title="1">{
+                if relErrors := rel.ValidateAgainst(d.Entities); len(relErrors) &gt; 0 </span><span class="cov8" title="1">{
+                        for _, err := range relErrors </span><span class="cov8" title="1">{
+                                errors = append(errors, ValidationError{
+                                        Field:   fmt.Sprintf("Relationship[%d].%s", i, err.Field),
+                                        Message: err.Message,
+                                })
+                        }</span>
+                }
+        }
+
+        <span class="cov8" title="1">return errors</span>
+}
+
+// Validate checks the entity for structural validity.
+func (e *Entity) Validate() []ValidationError <span class="cov8" title="1">{
+        var errors []ValidationError
+
+        // Check name is present
+        if strings.TrimSpace(e.Name) == "" </span><span class="cov8" title="1">{
+                errors = append(errors, ValidationError{
+                        Field:   "Name",
+                        Message: "entity name is required",
+                })
+        }</span>
+
+        // Check attributes exist
+        <span class="cov8" title="1">if len(e.Attributes) == 0 </span><span class="cov8" title="1">{
+                errors = append(errors, ValidationError{
+                        Field:   "Attributes",
+                        Message: "entity must have at least one attribute",
+                })
+        }</span>
+
+        // Validate each attribute
+        <span class="cov8" title="1">for i, attr := range e.Attributes </span><span class="cov8" title="1">{
+                if attrErrors := attr.Validate(); len(attrErrors) &gt; 0 </span><span class="cov8" title="1">{
+                        for _, err := range attrErrors </span><span class="cov8" title="1">{
+                                errors = append(errors, ValidationError{
+                                        Field:   fmt.Sprintf("Attribute[%d].%s", i, err.Field),
+                                        Message: err.Message,
+                                })
+                        }</span>
+                }
+        }
+
+        <span class="cov8" title="1">return errors</span>
+}
+
+// Validate checks the attribute for structural validity.
+func (a *Attribute) Validate() []ValidationError <span class="cov8" title="1">{
+        var errors []ValidationError
+
+        // Check name is present
+        if strings.TrimSpace(a.Name) == "" </span><span class="cov8" title="1">{
+                errors = append(errors, ValidationError{
+                        Field:   "Name",
+                        Message: "attribute name is required",
+                })
+        }</span>
+
+        // Check type is present
+        <span class="cov8" title="1">if strings.TrimSpace(a.Type) == "" </span><span class="cov8" title="1">{
+                errors = append(errors, ValidationError{
+                        Field:   "Type",
+                        Message: "attribute type is required",
+                })
+        }</span>
+
+        // Validate key type if present
+        <span class="cov8" title="1">if a.Key != nil </span><span class="cov8" title="1">{
+                if !isValidKeyType(*a.Key) </span><span class="cov8" title="1">{
+                        errors = append(errors, ValidationError{
+                                Field:   "Key",
+                                Message: fmt.Sprintf("invalid key type: %s", *a.Key),
+                        })
+                }</span>
+        }
+
+        <span class="cov8" title="1">return errors</span>
+}
+
+// ValidateAgainst checks the relationship references valid entities.
+func (r *Relationship) ValidateAgainst(entities map[string]*Entity) []ValidationError <span class="cov8" title="1">{
+        var errors []ValidationError
+
+        // Check from entity exists
+        if strings.TrimSpace(r.From) == "" </span><span class="cov8" title="1">{
+                errors = append(errors, ValidationError{
+                        Field:   "From",
+                        Message: "from entity is required",
+                })
+        }</span> else<span class="cov8" title="1"> if _, exists := entities[r.From]; !exists </span><span class="cov8" title="1">{
+                errors = append(errors, ValidationError{
+                        Field:   "From",
+                        Message: fmt.Sprintf("entity '%s' does not exist", r.From),
+                })
+        }</span>
+
+        // Check to entity exists
+        <span class="cov8" title="1">if strings.TrimSpace(r.To) == "" </span><span class="cov8" title="1">{
+                errors = append(errors, ValidationError{
+                        Field:   "To",
+                        Message: "to entity is required",
+                })
+        }</span> else<span class="cov8" title="1"> if _, exists := entities[r.To]; !exists </span><span class="cov8" title="1">{
+                errors = append(errors, ValidationError{
+                        Field:   "To",
+                        Message: fmt.Sprintf("entity '%s' does not exist", r.To),
+                })
+        }</span>
+
+        // Check field is present
+        <span class="cov8" title="1">if strings.TrimSpace(r.Field) == "" </span><span class="cov8" title="1">{
+                errors = append(errors, ValidationError{
+                        Field:   "Field",
+                        Message: "field name is required",
+                })
+        }</span>
+
+        // Validate cardinality
+        <span class="cov8" title="1">if !isValidCardinality(r.Cardinality) </span><span class="cov8" title="1">{
+                errors = append(errors, ValidationError{
+                        Field:   "Cardinality",
+                        Message: fmt.Sprintf("invalid cardinality: %s", r.Cardinality),
+                })
+        }</span>
+
+        <span class="cov8" title="1">return errors</span>
+}
+
+// isValidKeyType checks if a key type is valid.
+func isValidKeyType(kt KeyType) bool <span class="cov8" title="1">{
+        switch kt </span>{
+        case PrimaryKey, ForeignKey, UniqueKey:<span class="cov8" title="1">
+                return true</span>
+        default:<span class="cov8" title="1">
+                return false</span>
+        }
+}
+
+// isValidCardinality checks if a cardinality is valid.
+func isValidCardinality(c Cardinality) bool <span class="cov8" title="1">{
+        switch c </span>{
+        case OneToOne, OneToMany, ManyToOne, ManyToMany:<span class="cov8" title="1">
+                return true</span>
+        default:<span class="cov8" title="1">
+                return false</span>
+        }
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
