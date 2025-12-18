@@ -2,9 +2,14 @@ package erd
 
 import "testing"
 
+const (
+	testNote    = "test note"
+	customLabel = "custom label"
+)
+
 func TestBuilderMethods(t *testing.T) {
 	t.Run("Entity.WithNote", func(t *testing.T) {
-		note := "test note"
+		note := testNote
 		entity := NewEntity("User").WithNote(note)
 		if entity.Note == nil || *entity.Note != note {
 			t.Errorf("WithNote() = %v, want %v", entity.Note, note)
@@ -27,7 +32,7 @@ func TestBuilderMethods(t *testing.T) {
 	})
 
 	t.Run("Relationship.WithLabel", func(t *testing.T) {
-		label := "custom label"
+		label := customLabel
 		rel := NewRelationship("User", "Post", "Posts", OneToMany).WithLabel(label)
 		if rel.Label == nil || *rel.Label != label {
 			t.Errorf("WithLabel() = %v, want %v", rel.Label, label)

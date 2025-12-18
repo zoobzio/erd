@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: ['1.21', '1.22', '1.23']
+        go-version: ['1.24', '1.25']
 
     steps:
     - uses: actions/checkout@v4
@@ -26,7 +26,7 @@ jobs:
       run: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
 
     - name: Upload coverage
-      if: matrix.go-version == '1.23'
+      if: matrix.go-version == '1.25'
       uses: codecov/codecov-action@v4
       with:
         file: ./coverage.txt
@@ -40,20 +40,18 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
-        go-version: '1.23'
+        go-version: '1.25'
 
     - name: golangci-lint
-      uses: golangci/golangci-lint-action@v6
+      uses: golangci/golangci-lint-action@v8
       with:
-        version: v1.64.8
+        version: v2.7.2
         args: --config=.golangci.yml --timeout=5m
-        skip-cache: false
-        skip-save-cache: false
 
     - name: Security Report
       if: always()
       run: |
-        golangci-lint run --config=.golangci.yml --out-format=json > lint-report.json || true
+        golangci-lint run --config=.golangci.yml --output.formats=json > lint-report.json || true
         echo "### Security Scan Summary" >> $GITHUB_STEP_SUMMARY
         echo "Linters with findings:" >> $GITHUB_STEP_SUMMARY
         jq -r '.Issues[] | .FromLinter' lint-report.json 2>/dev/null | sort | uniq -c | sort -nr >> $GITHUB_STEP_SUMMARY || echo "No issues found ✅" >> $GITHUB_STEP_SUMMARY

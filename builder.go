@@ -1,3 +1,4 @@
+// Package erd provides types and functions for generating Entity Relationship Diagrams.
 package erd
 
 // NewDiagram creates a new ERD diagram.

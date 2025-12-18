@@ -9,18 +9,7 @@
 [![Go Version](https://img.shields.io/github/go-mod/go-version/zoobzio/erd)](go.mod)
 [![Release](https://img.shields.io/github/v/release/zoobzio/erd)](https://github.com/zoobzio/erd/releases)
 
-Go package for defining and generating Entity Relationship Diagrams from domain models.
-
-## Overview
-
-`erd` provides a declarative way to define domain model relationships using Go structs, following the same pattern as the `openapi` and `dbml` packages. Unlike DBML (which models database schemas), ERD models Go type relationships - struct fields, embeddings, and collections.
-
-## Features
-
-- **Declarative API**: Define entities, attributes, and relationships using builder patterns
-- **Multiple Output Formats**: Generate Mermaid and GraphViz DOT diagrams
-- **Validation**: Built-in validation for diagram structure
-- **Type-safe**: Strongly-typed cardinality and key constraints
+Go package for generating Entity Relationship Diagrams from domain models.
 
 ## Installation
 
@@ -28,95 +17,145 @@ Go package for defining and generating Entity Relationship Diagrams from domain 
 go get github.com/zoobzio/erd
 ```
 
-## Usage
+## Example
 
-### Creating a Diagram
-
-```go
-diagram := erd.NewDiagram("User Management System").
-    WithDescription("Core entities for user and order management")
-
-// Define entities
-user := erd.NewEntity("User").
-    AddAttribute(erd.NewAttribute("ID", "string").WithPrimaryKey()).
-    AddAttribute(erd.NewAttribute("Email", "string").WithUnique()).
-    AddAttribute(erd.NewAttribute("Name", "string"))
-
-profile := erd.NewEntity("Profile").
-    AddAttribute(erd.NewAttribute("ID", "string").WithPrimaryKey()).
-    AddAttribute(erd.NewAttribute("Bio", "string").WithNullable())
-
-diagram.
-    AddEntity(user).
-    AddEntity(profile).
-    AddRelationship(erd.NewRelationship("User", "Profile", "Profile", erd.OneToOne))
-```
-
-### Generating Output
+Define your domain models with `erd` struct tags:
 
 ```go
-// Generate Mermaid diagram
-mermaid := diagram.ToMermaid()
-fmt.Println(mermaid)
+package main
 
-// Generate GraphViz DOT diagram
-dot := diagram.ToDOT()
-fmt.Println(dot)
-```
+import (
+    "fmt"
 
-### Validation
+    "github.com/zoobzio/erd"
+    "github.com/zoobzio/sentinel"
+)
 
-```go
-errors := diagram.Validate()
-if len(errors) > 0 {
-    for _, err := range errors {
-        fmt.Println(err)
-    }
+type User struct {
+    ID      string   `erd:"pk"`
+    Email   string   `erd:"uk"`
+    Name    string
+    Profile *Profile
+    Orders  []Order
+}
+
+type Profile struct {
+    ID     string  `erd:"pk"`
+    Bio    *string
+    Avatar *string `erd:"note:Profile picture URL"`
+}
+
+type Order struct {
+    ID     string  `erd:"pk"`
+    UserID string  `erd:"fk"`
+    Total  float64
+    Status string
+}
+
+func main() {
+    // Scan types to extract metadata
+    sentinel.Scan[User]()
+
+    // Generate ERD from schema
+    diagram := erd.FromSchema("User Domain", sentinel.Schema())
+
+    // Output as Mermaid
+    fmt.Println(diagram.ToMermaid())
 }
 ```
 
-## Key Concepts
+This produces the following diagram:
 
-### Entity
+```mermaid
+erDiagram
+    Order {
+        string ID PK
+        string UserID FK
+        float64 Total
+        string Status
+    }
+    Profile {
+        string ID PK
+        string Bio "nullable"
+        string Avatar "nullable, Profile picture URL"
+    }
+    User {
+        string ID PK
+        string Email UK
+        string Name
+    }
+    User ||--|| Profile : Profile
+    User ||--o{ Order : Orders
+```
 
-Represents a domain model entity (typically a Go struct):
+## Struct Tags
 
-- Name
-- Package (optional)
-- Attributes
-- Notes
+The `erd` tag supports:
 
-### Attribute
+| Tag | Description |
+|-----|-------------|
+| `pk` | Primary key |
+| `fk` | Foreign key |
+| `uk` | Unique key |
+| `note:...` | Attribute note |
 
-Represents a field/property of an entity:
+Tags can be combined: `erd:"pk,note:Auto-generated UUID"`
 
-- Name and Type
-- Key constraints (PK, FK, UK)
-- Nullable flag
-- Notes
+## Relationships
 
-### Relationship
+Relationships are inferred from struct fields:
 
-Represents relationships between entities:
+| Field Type | Cardinality |
+|------------|-------------|
+| `*T` (pointer) | One-to-one |
+| `[]T` (slice) | One-to-many |
+| `T` (embedded) | One-to-one |
+| `map[K]V` | Many-to-many |
 
-- From/To entities
-- Field name
-- Cardinality (one-to-one, one-to-many, many-to-one, many-to-many)
-- Optional label and notes
+## Output Formats
 
-### Cardinality Types
-
-- `OneToOne`: Single reference (`User.Profile`)
-- `OneToMany`: Collection (`User.Orders`)
-- `ManyToOne`: Reverse of one-to-many
-- `ManyToMany`: Bi-directional collection
-
-## Integration with Sentinel
-
-This package is designed to work with [sentinel](https://github.com/zoobzio/sentinel) for automatic ERD generation from Go types:
+### Mermaid
 
 ```go
-// sentinel extracts type metadata -> populates erd structs -> generates diagrams
+mermaid := diagram.ToMermaid()
+```
+
+### GraphViz DOT
+
+```go
+dot := diagram.ToDOT()
+```
+
+## Manual Construction
+
+For cases where you need more control:
+
+```go
+diagram := erd.NewDiagram("E-commerce").
+    WithDescription("Shopping cart domain model")
+
+product := erd.NewEntity("Product").
+    AddAttribute(erd.NewAttribute("ID", "string").WithPrimaryKey()).
+    AddAttribute(erd.NewAttribute("Name", "string")).
+    AddAttribute(erd.NewAttribute("Price", "float64"))
+
+cart := erd.NewEntity("Cart").
+    AddAttribute(erd.NewAttribute("ID", "string").WithPrimaryKey()).
+    AddAttribute(erd.NewAttribute("UserID", "string").WithForeignKey())
+
+diagram.
+    AddEntity(product).
+    AddEntity(cart).
+    AddRelationship(erd.NewRelationship("Cart", "Product", "Items", erd.ManyToMany))
+```
+
+## Validation
+
+```go
+errors := diagram.Validate()
+for _, err := range errors {
+    fmt.Println(err.Error())
+}
 ```
 
 ## License

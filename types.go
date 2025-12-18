@@ -28,6 +28,7 @@ type Attribute struct {
 // KeyType represents the key constraint on an attribute.
 type KeyType string
 
+// Key type constants.
 const (
 	PrimaryKey KeyType = "PK"
 	ForeignKey KeyType = "FK"
@@ -47,6 +48,7 @@ type Relationship struct {
 // Cardinality represents the type of relationship between entities.
 type Cardinality string
 
+// Cardinality constants.
 const (
 	OneToOne   Cardinality = "one-to-one"
 	OneToMany  Cardinality = "one-to-many"
