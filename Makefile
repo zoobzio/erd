@@ -1,4 +1,4 @@
-.PHONY: test bench lint coverage clean all help
+.PHONY: test bench lint coverage clean all help check ci install-tools install-hooks
 
 # Default target
 all: test lint
@@ -16,9 +16,13 @@ help:
 	@echo "  make coverage     - Generate coverage report (HTML)"
 	@echo "  make check        - Run tests and lint (quick check)"
 	@echo ""
+	@echo "Setup:"
+	@echo "  make install-tools - Install required development tools"
+	@echo "  make install-hooks - Install git pre-commit hook"
+	@echo ""
 	@echo "Other:"
-	@echo "  make install-tools- Install required development tools"
 	@echo "  make clean        - Clean generated files"
+	@echo "  make ci           - Run full CI simulation"
 	@echo "  make all          - Run tests and lint (default)"
 
 # Run tests with race detector
@@ -61,6 +65,15 @@ clean:
 install-tools:
 	@echo "Installing development tools..."
 	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@v2.7.2
+
+# Install git pre-commit hook
+install-hooks:
+	@echo "Installing git hooks..."
+	@mkdir -p .git/hooks
+	@echo '#!/bin/sh' > .git/hooks/pre-commit
+	@echo 'make check' >> .git/hooks/pre-commit
+	@chmod +x .git/hooks/pre-commit
+	@echo "Pre-commit hook installed"
 
 # Quick check - run tests and lint
 check: test lint
