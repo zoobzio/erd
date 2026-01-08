@@ -1,2 +1,4 @@
 github.com/zoobzio/sentinel v0.0.6 h1:K6xqs/qelsjC5wGthPzw3cRWjGi0p1mwhh5oSJQT6Ko=
 github.com/zoobzio/sentinel v0.0.6/go.mod h1:1c0vVxUQLFuBrAqMJyvWKWsRW5fp2UT5+jzC9FucUWY=
+github.com/zoobzio/sentinel v1.0.2 h1:hTs5Ke2Vi0VgOkoHSJF9G3BYnxTQjMbvOH+qbbQLaoY=
+github.com/zoobzio/sentinel v1.0.2/go.mod h1:gtsD0AYlTEI8ajpEQ3azb7BDZicdsESOB1dJpQqgDKc=

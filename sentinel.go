@@ -12,7 +12,7 @@ func init() {
 
 // FromSchema converts a sentinel schema to an ERD diagram.
 // The schema is typically obtained via sentinel.Schema() after scanning types.
-func FromSchema(title string, schema map[string]sentinel.ModelMetadata) *Diagram {
+func FromSchema(title string, schema map[string]sentinel.Metadata) *Diagram {
 	diagram := NewDiagram(title)
 
 	// Add entities, filtering out relationship fields
@@ -31,9 +31,9 @@ func FromSchema(title string, schema map[string]sentinel.ModelMetadata) *Diagram
 	return diagram
 }
 
-// fromMetadataFiltered converts sentinel ModelMetadata to an ERD Entity,
+// fromMetadataFiltered converts sentinel Metadata to an ERD Entity,
 // filtering out fields that are represented as relationships.
-func fromMetadataFiltered(meta sentinel.ModelMetadata) *Entity {
+func fromMetadataFiltered(meta sentinel.Metadata) *Entity {
 	// Build set of relationship field names
 	relFields := make(map[string]bool)
 	for _, rel := range meta.Relationships {
@@ -58,8 +58,8 @@ func fromMetadataFiltered(meta sentinel.ModelMetadata) *Entity {
 	return entity
 }
 
-// FromMetadata converts a single sentinel ModelMetadata to an ERD Entity.
-func FromMetadata(meta sentinel.ModelMetadata) *Entity {
+// FromMetadata converts a single sentinel Metadata to an ERD Entity.
+func FromMetadata(meta sentinel.Metadata) *Entity {
 	entity := NewEntity(meta.TypeName)
 
 	if meta.PackageName != "" {

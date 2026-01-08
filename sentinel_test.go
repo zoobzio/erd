@@ -213,7 +213,7 @@ func TestCardinalityFromKind(t *testing.T) {
 	// Check for embedding relationship (Address)
 	var embeddingRel *Relationship
 	for _, rel := range diagram.Relationships {
-		if rel.From == "Company" && rel.To == "Address" {
+		if rel.From == "github.com/zoobzio/erd.Company" && rel.To == "github.com/zoobzio/erd.Address" {
 			embeddingRel = rel
 			break
 		}
