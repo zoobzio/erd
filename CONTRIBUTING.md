@@ -20,12 +20,17 @@ Thank you for your interest in contributing to ERD! We welcome contributions fro
 - golangci-lint (install with `make install-tools`)
 
 ### Running Tests
+
+Run `make help` to see all available commands:
+
 ```bash
-make test        # Run all tests
-make bench       # Run benchmarks
-make coverage    # Generate coverage report
-make lint        # Run linters
-make check       # Run tests and lint
+make test             # Run all tests with race detector
+make test-unit        # Run unit tests only (short mode)
+make test-integration # Run integration tests
+make bench            # Run benchmarks
+make coverage         # Generate coverage report
+make lint             # Run linters
+make check            # Run tests and lint
 ```
 
 ## Code Style

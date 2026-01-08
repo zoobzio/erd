@@ -29,14 +29,14 @@ jobs:
           go mod tidy
           git diff --exit-code go.mod || (echo "go.mod needs updating" && exit 1)
 
+      - name: Install tools
+        run: make install-tools
+
       - name: Run tests
-        run: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+        run: make test
 
       - name: Run linting
-        uses: golangci/golangci-lint-action@v8
-        with:
-          version: v2.7.2
-          args: --config=.golangci.yml --timeout=5m
+        run: make lint
 
   release:
     name: Create Release

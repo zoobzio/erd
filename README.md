@@ -11,6 +11,20 @@
 
 Go package for generating Entity Relationship Diagrams from domain models.
 
+## Domain as Diagram
+
+Your Go structs already define your domain. ERD extracts that structure and renders it as visual documentation that stays in sync with your code.
+
+```go
+type User struct {
+    ID      string   `erd:"pk"`
+    Profile *Profile              // one-to-one
+    Orders  []Order               // one-to-many
+}
+```
+
+The relationships live in your types. ERD makes them visible.
+
 ## Installation
 
 ```bash
@@ -157,6 +171,23 @@ for _, err := range errors {
     fmt.Println(err.Error())
 }
 ```
+
+## Why erd?
+
+- **Type-driven**: Relationships inferred from Go types, not annotations
+- **Two modes**: Automatic via sentinel, or manual builder API
+- **Multiple formats**: Mermaid for browsers, DOT for print-quality output
+- **Zero config**: Works out of the box with standard Go structs
+- **Validation**: Catches structural errors before rendering
+
+## Documentation
+
+- [API Reference](https://pkg.go.dev/github.com/zoobzio/erd) - Complete API documentation
+- [Sentinel](https://github.com/zoobzio/sentinel) - Type scanning library used for automatic extraction
+
+## Contributing
+
+Contributions welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
 
 ## License
 

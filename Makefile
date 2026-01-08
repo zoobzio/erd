@@ -1,7 +1,7 @@
-.PHONY: test bench lint coverage clean all help check ci install-tools install-hooks
+.PHONY: test test-unit test-integration bench lint lint-fix coverage clean all help check ci install-tools install-hooks
 
-# Default target
-all: test lint
+# Default goal
+.DEFAULT_GOAL := help
 
 # Display help
 help:
@@ -9,12 +9,14 @@ help:
 	@echo "========================"
 	@echo ""
 	@echo "Testing & Quality:"
-	@echo "  make test         - Run all tests with race detector"
-	@echo "  make bench        - Run benchmarks"
-	@echo "  make lint         - Run linters"
-	@echo "  make lint-fix     - Run linters with auto-fix"
-	@echo "  make coverage     - Generate coverage report (HTML)"
-	@echo "  make check        - Run tests and lint (quick check)"
+	@echo "  make test             - Run all tests with race detector"
+	@echo "  make test-unit        - Run unit tests only (short mode)"
+	@echo "  make test-integration - Run integration tests"
+	@echo "  make bench            - Run benchmarks"
+	@echo "  make lint             - Run linters"
+	@echo "  make lint-fix         - Run linters with auto-fix"
+	@echo "  make coverage         - Generate coverage report (HTML)"
+	@echo "  make check            - Run tests and lint (quick check)"
 	@echo ""
 	@echo "Setup:"
 	@echo "  make install-tools - Install required development tools"
@@ -25,10 +27,20 @@ help:
 	@echo "  make ci           - Run full CI simulation"
 	@echo "  make all          - Run tests and lint (default)"
 
-# Run tests with race detector
+# Run all tests with race detector
 test:
 	@echo "Running tests..."
 	@go test -v -race ./...
+
+# Run unit tests only (short mode)
+test-unit:
+	@echo "Running unit tests..."
+	@go test -v -short ./...
+
+# Run integration tests
+test-integration:
+	@echo "Running integration tests..."
+	@go test -v -run Integration ./...
 
 # Run benchmarks
 bench:
@@ -64,7 +76,7 @@ clean:
 # Install development tools
 install-tools:
 	@echo "Installing development tools..."
-	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@v2.7.2
+	@go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.7.2
 
 # Install git pre-commit hook
 install-hooks:

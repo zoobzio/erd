@@ -159,6 +159,7 @@ linters:
         linters:
           - funlen
           - dupl
+          - goconst
           - govet
 
 formatters:
